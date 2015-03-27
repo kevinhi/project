@@ -12,7 +12,7 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+                    <p class="site-title">@Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/icon.jpg\" ... />"))</p>
                 </div>
                 <div class="float-right">
                     <section id="login">
@@ -37,7 +37,7 @@
         <footer>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
+                    <p>&copy; @DateTime.Now.Year - Music Streaming Site - Joel Svensson - Kevin Hildebrand</p>
                 </div>
             </div>
         </footer>
