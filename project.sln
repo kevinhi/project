@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "project", "project\project.csproj", "{48A8F7D3-65E3-44BD-AF73-8E8DA13CA9AD}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "project.Azure", "project.Azure\project.Azure.ccproj", "{2AD99B71-25BD-43C3-ABA7-C92EE0A658BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{48A8F7D3-65E3-44BD-AF73-8E8DA13CA9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48A8F7D3-65E3-44BD-AF73-8E8DA13CA9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48A8F7D3-65E3-44BD-AF73-8E8DA13CA9AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AD99B71-25BD-43C3-ABA7-C92EE0A658BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AD99B71-25BD-43C3-ABA7-C92EE0A658BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AD99B71-25BD-43C3-ABA7-C92EE0A658BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AD99B71-25BD-43C3-ABA7-C92EE0A658BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

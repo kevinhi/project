@@ -19,13 +19,11 @@ else
 { 
     @Html.Partial("_SetPasswordPartial")
 }
+@if (ViewBag.isAdmin)
+{
+    <p>@Html.ActionLink("Manage Roles", "RoleCreate")</p>
+}
 
-<section id="externalLogins">
-    @Html.Action("RemoveExternalLogins")
-
-    <h3>Add an external login</h3>
-    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
-</section>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
