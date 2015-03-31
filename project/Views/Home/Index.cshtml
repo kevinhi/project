@@ -13,6 +13,7 @@
         </div>
     </section>
 }
+@if (!Request.IsAuthenticated) {
 <h3>Features of our site:</h3>
 <ol class="round">
     <li class="one">
@@ -30,3 +31,27 @@
         Build playlists of your favourite songs and organize them however you like.
     </li>
 </ol>
+}
+else
+{
+    <h3>What would you like to do?</h3>
+    <div style="width:33%; height:100%; float:left;">
+        <h5>Upload your music</h5>
+        <a href='@Url.Action("Upload", "Media")'>
+            <img src='@Url.Content("~/Images/Upload.jpg")' width="50" height="50" />
+        </a>
+    </div>
+    <div style="width:33%; height:100%; float:left;">
+        <h5>Listen to music</h5>
+        <a href='@Url.Action("Listen", "Media")'>
+            <img src='@Url.Content("~/Images/listen.jpg")' width="50" height="50" />
+        </a>
+    </div>
+    <div style="width:33%; height:100%; float:left;">
+        <h5>Create Playlists</h5>
+        <a href='@Url.Action("CreatePlaylist", "Media")'>
+            <img src='@Url.Content("~/Images/playlist.jpg")' width="50" height="50" />
+        </a>
+    </div>
+    
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="project.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2014-06.2.4">
+  <Role name="project">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=mymusicfiles;AccountKey=Nqxk/dS0fRnxQ0BcggP/nmnF0uTvNtOZSfKw1PYpO86xvupY4TN3goDjt4kV7+5W+2sK/khDTTUKUPmlPkM96g==" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
