@@ -13,7 +13,7 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p class="site-title">@Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/icon.jpg\" ... />"))</p>
+                    <p class="site-title">@Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/icon.png\" ... />"))</p>
                 </div>
                 <div class="float-right">
                     <section id="login">
@@ -21,20 +21,29 @@
                     </section>
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("My Media", "Index", "Media")</li>
+                            @if (Request.IsAuthenticated) {
+                                <li>@Html.ActionLink("Upload Music", "Upload", "Media")</li>
+                                <li>@Html.ActionLink("Listen to Music", "Listen", "Media")</li>
+                                <li>@Html.ActionLink("Create Playlists", "Index", "Media")</li>
+                            }
+                            else
+                            { 
+                                <li>@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                                <li>@Html.ActionLink("Create Account", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                            }
                         </ul>
                     </nav>
                 </div>
             </div>
         </header>
+
         <div id="body">
+
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
             </section>
+
         </div>
         <footer>
             <div class="content-wrapper">
