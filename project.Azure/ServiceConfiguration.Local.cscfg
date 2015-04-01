@@ -4,6 +4,7 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="StorageConnectionString" value="DefaultEndpointsProtocol=https;AccountName=mymusicfiles;AccountKey=Nqxk/dS0fRnxQ0BcggP/nmnF0uTvNtOZSfKw1PYpO86xvupY4TN3goDjt4kV7+5W+2sK/khDTTUKUPmlPkM96g==" />
+      <Setting name="StorageConnection2" value="UseDevelopmentStorage=true" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

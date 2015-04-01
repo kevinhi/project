@@ -1,12 +1,20 @@
 ﻿@model project.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Create a new account";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+            </hgroup>
+            <p>
+                Choose username and password to continue
+            </p>
+        </div>
+    </section>
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
-</hgroup>
 
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
@@ -28,7 +36,7 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
         </ol>
-        <input type="submit" value="Register" />
+        <input type="submit" value="Continue" />
     </fieldset>
 }
 

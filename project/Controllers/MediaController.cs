@@ -18,6 +18,7 @@ using project.Filters;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Auth;
 using System.Web.Security;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace project.Controllers
 {
@@ -176,7 +177,7 @@ namespace project.Controllers
                     audio.FileName, audio.ContentType, audio.ContentLength);
                 // TODO: actually save the image to Azure blob storage
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                        CloudConfigurationManager.GetSetting("StorageConnectionString")); 
+                RoleEnvironment.GetConfigurationSettingValue("StorageConnectionString"));
                 CloudBlobClient blobStorage = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer container = blobStorage.GetContainerReference("music");
                 container.CreateIfNotExists();
