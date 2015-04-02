@@ -179,7 +179,7 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult Listen(bool isRating)
+        public ActionResult Listen(bool isRating = false)
         {
             if (isRating)
             {
