@@ -4,7 +4,18 @@
     ViewBag.Title = "Upload";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Upload New Media</h2>
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+            </hgroup>
+            <p>
+                Welcome to our Music Service Website
+            </p>
+        </div>
+    </section>
+}
 @using (Html.BeginForm("UploadFile", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="editor-label">
@@ -34,11 +45,7 @@
         <input type="submit" value="Upload" />
     </span>
 }
-<aside>
-    <h3>Uploaded songs</h3>
-    <h1>songs</h1>
-    <p>Here will all the songs that you have uploaded appear.</p>
-</aside>
+
 <div>
     @Html.ActionLink("Back to My Media", "Index")
 </div>
