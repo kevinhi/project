@@ -21,10 +21,18 @@
                     </section>
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("My Media", "Index", "Media")</li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li>@Html.ActionLink("Upload Music", "Upload", "Media")</li>
+                                <li>@Html.ActionLink("Listen to Music", "Listen", "Media", new { isRating = false })</li>
+                                <li>@Html.ActionLink("Create Playlists", "Index", "Media")</li>
+                                <li>@Html.ActionLink("My Media", "Index", "Media")</li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                                <li>@Html.ActionLink("Create Account", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                            }
                         </ul>
                     </nav>
                 </div>

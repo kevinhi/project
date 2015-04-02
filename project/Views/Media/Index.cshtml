@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<project.Models.MediaElement>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My Media";
 }
 
-<h2>Index</h2>
+<h2>My Media</h2>
 
-<p>
-    @Html.ActionLink("Upload New Media", "Upload")
-</p>
 <table>
     <tr>
         <th>
@@ -21,9 +18,12 @@
             @Html.DisplayNameFor(model => model.IsPublic)
         </th>
         <th></th>
+        <th></th>
     </tr>
 
+
 @foreach (var item in Model) {
+    if (item.UserId.Equals(Convert.ToString(Membership.GetUser().ProviderUserKey))) { 
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.UserId)
@@ -39,7 +39,17 @@
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
+        <td>
+            <article class="audio">
+                <audio controls>
+                    <source src=@item.FileUrl type="audio/mp3" />
+                    <p>Your browser does not support HTML 5 audio element</p>
+                </audio>
+            </article>
+        </td>
     </tr>
+    }
 }
 
 </table>
+

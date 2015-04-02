@@ -25,9 +25,9 @@
     <div class="editor-label">
         @Html.LabelFor(model => model.Genre)
     </div>  
-    /*<div class="editor-field">
-        @Html.DropDownListFor(model => model.Genre, model.RateItem);
-    </div>*/
+    <div class="editor-field">
+        @Html.ListBoxFor(model => model.Genre, Model.Values)
+    </div>
     
     <span>
         <input type="file" name="myFile" accept=".mp3" /> <br>
@@ -40,7 +40,7 @@
     <p>Here will all the songs that you have uploaded appear.</p>
 </aside>
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to My Media", "Index")
 </div>
 @section Scripts {
     <script src="~/Scripts/media-upload.js"></script>

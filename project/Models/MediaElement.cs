@@ -11,6 +11,9 @@ namespace project.Models
         public string FullBlobName { get; set; }
         public string FileUrl { get; set; }
         public string Genre { get; set; }
+        public string Votes { get; set; }
+        public IEnumerable<SelectListItem> Values { get; set; }
         
     }
+
 }

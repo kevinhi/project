@@ -28,6 +28,7 @@ namespace project.Controllers
     {
         private projectContext db = new projectContext();
 
+
         //
         // GET: /Media/
         public ActionResult Index()
@@ -81,6 +82,27 @@ namespace project.Controllers
                 return HttpNotFound();
             }
             return View(mediaelement);
+        }
+
+        public ActionResult UpVote(int id = 0)
+        {
+            MediaElement mediaelement = db.MediaElements.Find(id);
+            if(mediaelement.Votes == null){
+                mediaelement.Votes = "1";
+                db.SaveChanges();
+                TempData["Vote"] = "1";
+                return RedirectToAction("Listen", new { isRating = true });
+            } else {
+                string vote = mediaelement.Votes;
+                int i = Int16.Parse(vote);
+                i ++;
+                vote = Convert.ToString(i);
+                TempData["Vote"] = vote;
+                mediaelement.Votes = vote;
+                db.SaveChanges();
+                return RedirectToAction("Listen", new { isRating = true });
+            }
+
         }
 
         //
@@ -141,14 +163,34 @@ namespace project.Controllers
         [HttpGet]
         public ActionResult Upload()
         {
-            return View();
+            var model = new MediaElement();
+
+
+            // the list of available values
+            model.Values = new[]
+            {
+                new SelectListItem { Value = "Rock", Text = "Rock" },
+                new SelectListItem { Value = "Pop", Text = "Pop" },
+                new SelectListItem { Value = "Indie", Text = "Indie" },
+                new SelectListItem { Value = "Classical", Text = "Classical" },
+            };
+
+            return View(model);
         }
 
         [HttpGet]
-        public ActionResult Listen()
+        public ActionResult Listen(bool isRating)
         {
+            if (isRating)
+            {
+                ViewBag.Vote = TempData["Vote"].ToString();
+                return View(db.MediaElements.ToList());
+            }
+            else
+            {
+                return View(db.MediaElements.ToList());
+            }        
             
-            return View();
         }
 
         [HttpGet]
@@ -156,8 +198,6 @@ namespace project.Controllers
         {
             return View();
         }
-
-
 
         [HttpPost]
         public ActionResult UploadFile(MediaElement mediaelement)
