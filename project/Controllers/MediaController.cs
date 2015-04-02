@@ -105,6 +105,30 @@ namespace project.Controllers
 
         }
 
+        public ActionResult DownVote(int id = 0)
+        {
+            MediaElement mediaelement = db.MediaElements.Find(id);
+            if (mediaelement.Votes == null)
+            {
+                mediaelement.Votes = "-1";
+                db.SaveChanges();
+                TempData["Vote"] = "+1";
+                return RedirectToAction("Listen", new { isRating = true });
+            }
+            else
+            {
+                string vote = mediaelement.Votes;
+                int i = Int16.Parse(vote);
+                i--;
+                vote = Convert.ToString(i);
+                TempData["Vote"] = vote;
+                mediaelement.Votes = vote;
+                db.SaveChanges();
+                return RedirectToAction("Listen", new { isRating = true });
+            }
+
+        }
+
         //
         // POST: /Media/Edit/5
         [HttpPost]
@@ -179,7 +203,7 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult Listen(bool isRating = false)
+        public ActionResult Listen(bool isRating) 
         {
             if (isRating)
             {
