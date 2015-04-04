@@ -1,0 +1,156 @@
+﻿@model IEnumerable<project.Models.MediaElement>
+@{
+    ViewBag.Title = "PlayAllMusicFrom One Player";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>@ViewBag.Title</h3>
+
+<div id="cwrap">
+    <div id="nowPlay">
+        <h3 id="npAction">Paused:</h3>
+        <div id="npTitle"></div>
+    </div>
+    <div id="audiowrap">
+        <div id="audio0">
+            <audio id="audio1" controls="controls" width="300">
+                Your browser does not support the HTML5 Audio Tag.
+            </audio>
+        </div>
+        <div id="extraControls">
+            <button id="btnPrev" class="ctrlbtn">|&lt;&lt; Prev Track</button> <button id="btnNext" class="ctrlbtn">Next Track &gt;&gt;|</button>
+        </div>
+    </div>
+    <div id="plwrap">
+        <ul id="plUL">
+            @foreach (var item in Model)
+            {
+                <li>
+                    <div class="plItem">
+                        <div class="plNum">@item.Id</div>
+                        <div class="plTitle">@item.Title</div>
+                        <div class="plLength">@item.Genre</div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        var supportsAudio = !!document.createElement('audio').canPlayType;
+        if (supportsAudio) {
+            var index = 0,
+            playing = false;
+            mediaPath = '/how_to/assets/media/audio/',
+            extension = '',
+            tracks = [];
+            function MediaElement(id, title, fileurl, genre) {
+                this.id = id;
+                this.title = title;
+                this.fileurl = fileurl;
+                this.genre = genre;
+            };
+
+            $.ajax({
+                url: '@Url.Action("GetSongs")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // process the data coming back
+                    $.each(data, function (index, item) {
+                        var str = JSON.stringify(item, null, 2); // spacing level = 2
+                        var json = JSON.parse(str);
+                        var id = json["Id"];
+                        var fileurl = json["FileUrl"];
+                        var title = json["Title"];
+                        var genre = json["Genre"];
+                        var isPublic = json["IsPublic"];
+                        //tracks.push(id,title,genre,fileurl, isPublic);
+                        tracks.push(new MediaElement(id, title, fileurl, genre));
+
+                    });
+                    trackCount = tracks.length;
+                    npAction = $('#npAction');
+                    npTitle = $('#npTitle');
+                    
+                    audio = $('#audio1').bind('play', function () {
+                        playing = true;
+                        npAction.text('Now Playing:');
+                    }).bind('pause', function () {
+                        playing = false;
+                        npAction.text('Paused:');
+                    }).bind('ended', function () {
+                        npAction.text('Paused:');
+                        if ((index + 1) < trackCount) {
+                            index++;
+                            loadTrack(index);
+                            audio.play();
+                        } else {
+                            audio.pause();
+                            index = 0;
+                            loadTrack(index);
+                        }
+                    }).get(0)
+
+                    btnPrev = $('#btnPrev').click(function () {
+                        if ((index + 1) < trackCount) {
+                            index++;
+                            loadTrack(index);
+                            if (playing) {
+                                audio.play();
+                            }
+                        } else {
+                            audio.pause();
+                            index = 0;
+                            loadTrack(index);
+                        }
+                        
+                    }),
+            btnNext = $('#btnNext').click(function () {
+                if ((index - 1) > -1) {
+                    index--;
+                    loadTrack(index);
+                    if (playing) {
+                        audio.play();
+                    }
+                } else {
+                    audio.pause();
+                    index = 0;
+                    loadTrack(index);
+                }
+            }),
+            li = $('#plUL li').click(function () {
+                //var id = parseInt($(this).index());
+                var id = $("#plUL li").index(this);
+                if (id !== index) {
+                    playTrack(id);
+                }
+            }),
+            loadTrack = function (id) {
+                $('.plSel').removeClass('plSel');
+                $('#plUL li:eq(' + id + ')').addClass('plSel');
+                npTitle.text(tracks[id].title);
+                index = id;
+                audio.src = tracks[id].fileurl;
+            },
+            playTrack = function (id) {
+                loadTrack(id);
+                audio.play();
+            };
+                    if (audio.canPlayType('audio/ogg')) {
+                        extension = '.ogg';
+                    }
+                    if (audio.canPlayType('audio/mpeg')) {
+                        extension = '.mp3';
+                    }
+                    loadTrack(index);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            });
+        }
+    });
+</script>

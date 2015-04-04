@@ -1,0 +1,102 @@
+﻿@model IEnumerable<project.Models.MediaElement>
+
+@{
+    ViewBag.Title = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+            </hgroup>
+            <p>
+                Welcome to our Music Service Website
+            </p>
+        </div>
+    </section>
+}
+<form method="post" action="SearchForSong">
+    <div>
+        @Html.Label("Title:")
+        @Html.TextBox("titleToSearchFor")
+        <div><input type="submit" value="Search"></div>
+
+    </div>
+</form>
+@if (ViewBag.searchResults != null)
+{
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+            if (item.Title == ViewBag.searchResults)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        <article class="audio">
+                            <audio controls>
+                                <source src=@item.FileUrl type="audio/mp3" />
+                                <p>Your browser does not support HTML 5 audio element</p>
+                            </audio>
+                        </article>
+                    </td>
+                    <td>
+                        <div style="padding-left:100%;">
+                            <a href='@Url.Action("UpVote", "Media", new { id = item.Id })'>
+                                <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="padding-left:0%;">
+                            <a href='@Url.Action("DownVote", "Media", new { id = item.Id })'>
+                                <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="background-color:dimgrey; width:100%; height:10%;"><div style="color:white;">@item.Votes</div></div>
+                    </td>
+                </tr>
+
+            }
+        }
+
+    </table>
+}
+
+<div>
+    @Html.ActionLink("Back", "BrowseMusic")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+}

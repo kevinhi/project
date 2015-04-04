@@ -24,7 +24,7 @@
                             @if (Request.IsAuthenticated)
                             {
                                 <li>@Html.ActionLink("Upload Music", "Upload", "Media")</li>
-                                <li>@Html.ActionLink("Listen to Music", "Listen", "Media", routeValues: null, htmlAttributes: new { id = "isRating = false" })</li>
+    <li>@Html.ActionLink("Listen to Music", "BrowseMusic", "Media")</li>
                                 <li>@Html.ActionLink("Create Playlists", "Index", "Media")</li>
                                 <li>@Html.ActionLink("My Media", "Index", "Media")</li>
                             }

@@ -19,6 +19,9 @@ using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Auth;
 using System.Web.Security;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using WebMatrix.WebData;
+using System.Linq.Dynamic;
+
 
 namespace project.Controllers
 {
@@ -38,7 +41,7 @@ namespace project.Controllers
         }
 
 
-    
+
         public ActionResult Details(int id = 0)
         {
             MediaElement mediaelement = db.MediaElements.Find(id);
@@ -84,48 +87,191 @@ namespace project.Controllers
             return View(mediaelement);
         }
 
+
+
         public ActionResult UpVote(int id = 0)
         {
+            int mu1 = (int)WebSecurity.CurrentUserId;
             MediaElement mediaelement = db.MediaElements.Find(id);
-            if(mediaelement.Votes == null){
-                mediaelement.Votes = "1";
-                db.SaveChanges();
-                TempData["Vote"] = "1";
-                return RedirectToAction("Listen", new { isRating = true });
-            } else {
-                string vote = mediaelement.Votes;
-                int i = Int16.Parse(vote);
-                i ++;
-                vote = Convert.ToString(i);
-                TempData["Vote"] = vote;
-                mediaelement.Votes = vote;
-                db.SaveChanges();
-                return RedirectToAction("Listen", new { isRating = true });
+            if (mediaelement.UserVotedForSong != null)
+            {
+                string[] userThatVoted = mediaelement.UserVotedForSong.Split(',');
+                List<string> tempUsersID = userThatVoted.ToList();
+                foreach (string word in userThatVoted)
+                {
+                    if (Convert.ToString(mu1) == word)
+                    {
+                        TempData["UserVoted"] = "You have already voted for this song";
+                        return RedirectToAction("Listen", new { isRating = true, hasVoted = true });
+                    }
+                    else if (Convert.ToString(mu1) != word)
+                    {
+                        // user can vote
+                        tempUsersID.Remove(word);
+                        if (tempUsersID.Count == 0)
+                        {
+                            // Users can vote
+                            mediaelement.UserVotedForSong = mediaelement.UserVotedForSong + "," + mu1;
+                            db.SaveChanges();
+                            if (mediaelement.Votes == null)
+                            {
+                                mediaelement.Votes = "+1";
+                                db.SaveChanges();
+
+                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                            }
+                            else
+                            {
+                                string vote = mediaelement.Votes;
+                                int i = Int16.Parse(vote);
+                                i++;
+                                vote = Convert.ToString(i);
+                                mediaelement.Votes = vote;
+                                db.SaveChanges();
+                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                            }
+                        }
+                    }
+
+
+                }
             }
+            return null;
+
+        }
+
+        public ActionResult FindGenre(FormCollection form)
+        {
+
+            string genre = form["genre"].ToString();
+            System.Diagnostics.Debug.WriteLine(genre);
+            //ViewBag.selectedGenre = genre;
+            TempData["userGenre"] = genre;
+            return RedirectToAction("BrowseByGenre", new { tempDataSet = true });
+        }
+
+        public ActionResult BrowseByGenre(bool tempDataSet = false)
+        {
+            if (tempDataSet)
+            {
+                ViewBag.selectedGenre = TempData["UserGenre"].ToString();
+            }
+            List<string> genresList = new List<string>();
+            genresList.Add("Rock");
+            genresList.Add("Pop");
+            genresList.Add("Indie");
+            genresList.Add("Classical");
+            ViewBag.ListOfGenres = new SelectList(genresList);
+
+            return View(db.MediaElements.ToList());
+        }
+
+        public ActionResult SearchForSong(FormCollection form)
+        {
+
+            string titleToSearchFor = form["titleToSearchFor"].ToString();
+            System.Diagnostics.Debug.WriteLine(titleToSearchFor);
+            //ViewBag.selectedGenre = genre;
+            TempData["searchResults"] = titleToSearchFor;
+            return RedirectToAction("SearchTitle", new { hasSearched = true });
+        }
+
+        public ActionResult SearchTitle(bool hasSearched = false)
+        {
+            if (hasSearched)
+            {
+                ViewBag.searchResults = TempData["searchResults"].ToString();
+            }
+            return View(db.MediaElements.ToList());
+        }
+
+        public ActionResult selectAmountOfSongsToShow(FormCollection form)
+        {
+            int amount = Convert.ToInt32(form["amountToShow"]);
+            return RedirectToAction("TopRated", new { numberOfSongsToShow = amount });
+        }
+
+        public ActionResult TopRated(int numberOfSongsToShow = 0)
+        {
+            ViewBag.songsToShow = numberOfSongsToShow;
+            ViewBag.canShow = true;
+            if (numberOfSongsToShow == 0)
+            {
+                ViewBag.canShow = false;
+            }
+            List<int> amountToShow = new List<int>();
+            amountToShow.Add(1);
+            amountToShow.Add(2);
+            amountToShow.Add(3);
+            amountToShow.Add(4);
+            ViewBag.ListOfAmounts = new SelectList(amountToShow);
+
+            
+            var media = db.MediaElements;
+            var orderedMedia = media.OrderByDescending(a => a.Votes).Take(numberOfSongsToShow);
+
+            return View(orderedMedia);
+        }
+
+        public ActionResult GetSongs()
+        {
+            var media = db.MediaElements;
+            var orderedMedia = media.OrderByDescending(a => a.Id).ToList();
+
+            List<MediaElement> mediaList = orderedMedia;
+
+            return Json(mediaList, JsonRequestBehavior.AllowGet);
 
         }
 
         public ActionResult DownVote(int id = 0)
         {
+            int mu1 = (int)WebSecurity.CurrentUserId;
             MediaElement mediaelement = db.MediaElements.Find(id);
-            if (mediaelement.Votes == null)
+            if (mediaelement.UserVotedForSong != null)
             {
-                mediaelement.Votes = "-1";
-                db.SaveChanges();
-                TempData["Vote"] = "+1";
-                return RedirectToAction("Listen", new { isRating = true });
+                string[] userThatVoted = mediaelement.UserVotedForSong.Split(',');
+                List<string> tempUsersID = userThatVoted.ToList();
+                foreach (string word in userThatVoted)
+                {
+                    if (Convert.ToString(mu1) == word)
+                    {
+                        TempData["UserVoted"] = "You have already voted for this song";
+                        return RedirectToAction("Listen", new { isRating = true, hasVoted = true });
+                    }
+                    else if (Convert.ToString(mu1) != word)
+                    {
+                        // user can vote
+                        tempUsersID.Remove(word);
+                        if (tempUsersID.Count == 0)
+                        {
+                            // Users can vote
+                            mediaelement.UserVotedForSong = mediaelement.UserVotedForSong + "," + mu1;
+                            db.SaveChanges();
+                            if (mediaelement.Votes == null)
+                            {
+                                mediaelement.Votes = "-1";
+                                db.SaveChanges();
+
+                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                            }
+                            else
+                            {
+                                string vote = mediaelement.Votes;
+                                int i = Int16.Parse(vote);
+                                i--;
+                                vote = Convert.ToString(i);
+                                mediaelement.Votes = vote;
+                                db.SaveChanges();
+                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                            }
+                        }
+                    }
+
+
+                }
             }
-            else
-            {
-                string vote = mediaelement.Votes;
-                int i = Int16.Parse(vote);
-                i--;
-                vote = Convert.ToString(i);
-                TempData["Vote"] = vote;
-                mediaelement.Votes = vote;
-                db.SaveChanges();
-                return RedirectToAction("Listen", new { isRating = true });
-            }
+            return null;
 
         }
 
@@ -176,13 +322,13 @@ namespace project.Controllers
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileToDelete);
 
             // Delete the blob.
-            blockBlob.Delete(); 
+            blockBlob.Delete();
             db.MediaElements.Remove(mediaelement);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        
+
 
         [HttpGet]
         public ActionResult Upload()
@@ -203,18 +349,32 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult Listen(bool isRating) 
+        public ActionResult Listen(bool isRating = false, bool hasVoted = false)
         {
             if (isRating)
             {
-                ViewBag.Vote = TempData["Vote"].ToString();
-                return View(db.MediaElements.ToList());
+                if (hasVoted)
+                {
+                    ViewBag.VoteMessage = TempData["UserVoted"].ToString();
+                    return View(db.MediaElements.ToList());
+                }
+                else
+                {
+                    return View(db.MediaElements.ToList());
+                }
             }
             else
             {
                 return View(db.MediaElements.ToList());
-            }        
-            
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult BrowseMusic()
+        {
+            return View(db.MediaElements.ToList());
+
         }
 
         [HttpGet]
@@ -226,43 +386,44 @@ namespace project.Controllers
         [HttpPost]
         public ActionResult UploadFile(MediaElement mediaelement)
         {
-            
+
             if (ModelState.IsValid)
             {
-                
-            var audio = Request.Files["myFile"];
-            if (audio == null)
-            {
-                ViewBag.UploadMessage = "Failed to upload audio";
-            }
-            else
-            {
-                ViewBag.UploadMessage = String.Format("Got image {0} of type {1} and size {2}",
-                    audio.FileName, audio.ContentType, audio.ContentLength);
-                // TODO: actually save the image to Azure blob storage
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                RoleEnvironment.GetConfigurationSettingValue("StorageConnectionString"));
-                CloudBlobClient blobStorage = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobStorage.GetContainerReference("music");
-                container.CreateIfNotExists();
-                // configure container for public access
-                var permissions = container.GetPermissions();
-                permissions.PublicAccess = BlobContainerPublicAccessType.Container;
-                container.SetPermissions(permissions);
-                string uniqueBlobName = string.Format("music/audioFile{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(audio.FileName));
-                CloudBlockBlob blob = container.GetBlockBlobReference(uniqueBlobName);
-                blob.Properties.ContentType = audio.ContentType;
-                blob.UploadFromStream(audio.InputStream);
-                var blobUrl1 = blob.Uri.ToString();
-                mediaelement.FileUrl = blobUrl1;
-                mediaelement.FullBlobName = uniqueBlobName;
-                string currentUserId = Convert.ToString(Membership.GetUser().ProviderUserKey);
-                mediaelement.UserId = currentUserId;
-                db.MediaElements.Add(mediaelement);
-                db.SaveChanges();
-            }
-            
-               
+
+                var audio = Request.Files["myFile"];
+                if (audio == null)
+                {
+                    ViewBag.UploadMessage = "Failed to upload audio";
+                }
+                else
+                {
+                    ViewBag.UploadMessage = String.Format("Got image {0} of type {1} and size {2}",
+                        audio.FileName, audio.ContentType, audio.ContentLength);
+                    // TODO: actually save the image to Azure blob storage
+                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                    RoleEnvironment.GetConfigurationSettingValue("StorageConnectionString"));
+                    CloudBlobClient blobStorage = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobStorage.GetContainerReference("music");
+                    container.CreateIfNotExists();
+                    // configure container for public access
+                    var permissions = container.GetPermissions();
+                    permissions.PublicAccess = BlobContainerPublicAccessType.Container;
+                    container.SetPermissions(permissions);
+                    string uniqueBlobName = string.Format("music/audioFile{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(audio.FileName));
+                    CloudBlockBlob blob = container.GetBlockBlobReference(uniqueBlobName);
+                    blob.Properties.ContentType = audio.ContentType;
+                    blob.UploadFromStream(audio.InputStream);
+                    var blobUrl1 = blob.Uri.ToString();
+                    mediaelement.FileUrl = blobUrl1;
+                    mediaelement.FullBlobName = uniqueBlobName;
+                    string currentUserId = Convert.ToString(Membership.GetUser().ProviderUserKey);
+                    mediaelement.UserId = currentUserId;
+                    mediaelement.UserVotedForSong = "0";
+                    db.MediaElements.Add(mediaelement);
+                    db.SaveChanges();
+                }
+
+
             }
             return RedirectToAction("Upload", "Media");
         }
@@ -271,6 +432,12 @@ namespace project.Controllers
         {
             db.Dispose();
             base.Dispose(disposing);
+        }
+
+        [HttpGet]
+        public ActionResult PlayAllMusic()
+        {
+            return View(db.MediaElements.ToList());
         }
     }
 }

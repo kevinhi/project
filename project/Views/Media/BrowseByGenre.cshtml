@@ -1,12 +1,32 @@
 ﻿@model IEnumerable<project.Models.MediaElement>
 
 @{
-    ViewBag.Title = "Listen to Music";
+    ViewBag.Title = "Upload";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Listen To Music</h2>
-<h3>@ViewBag.VoteMessage</h3>
-       <table>
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+            </hgroup>
+            <p>
+                Welcome to our Music Service Website
+            </p>
+        </div>
+    </section>
+}
+<form method="post" action="FindGenre">
+    <div>
+        <p>Choose Genre: </p>
+        <div>@Html.DropDownList("genre", (SelectList)ViewBag.ListOfGenres)</div>
+        <div><input type="submit" value="Search"></div>
+        
+    </div>
+</form>
+@if (ViewBag.selectedGenre != null)
+{ 
+<table>
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Title)
@@ -31,7 +51,7 @@
 
     @foreach (var item in Model)
     {
-        if (item.IsPublic == true)
+        if (item.Genre == ViewBag.selectedGenre)
         {
             <tr>
                 <td>
@@ -71,4 +91,12 @@
     }
 
 </table>
+}
 
+    <div>
+        @Html.ActionLink("Back", "BrowseMusic")
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/jqueryval")
+    }

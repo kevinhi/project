@@ -1,37 +1,57 @@
 ﻿@model IEnumerable<project.Models.MediaElement>
 
 @{
-    ViewBag.Title = "Listen to Music";
+    ViewBag.Title = "Upload";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Listen To Music</h2>
-<h3>@ViewBag.VoteMessage</h3>
-       <table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Genre)
-        </th>
-        <th>
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+            </hgroup>
+            <p>
+                Welcome to our Music Service Website
+            </p>
+        </div>
+    </section>
+}
 
-        </th>
-        <th>
+<div>Top @ViewBag.songsToShow Played Songs On the Site</div>
+<form method="post" action="selectAmountOfSongsToShow">
+    <div>
+        <p>How Many Songs To Display: </p>
+        <div>@Html.DropDownList("amountToShow", (SelectList)ViewBag.ListOfAmounts)</div>
+        <div><input type="submit" value="Show"></div>
 
-        </th>
-        <th>
+    </div>
+</form>
+@if (ViewBag.canShow == true)
+{
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
 
-        </th>
-        <th>
+            </th>
+            <th>
 
-        </th>
-    </tr>
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
 
 
-    @foreach (var item in Model)
-    {
-        if (item.IsPublic == true)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
@@ -68,7 +88,14 @@
             </tr>
 
         }
-    }
 
-</table>
+    </table>
+}
 
+<div>
+    @Html.ActionLink("Back", "BrowseMusic")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+}

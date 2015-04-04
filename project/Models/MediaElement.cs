@@ -13,6 +13,7 @@ namespace project.Models
         public string Genre { get; set; }
         public string Votes { get; set; }
         public IEnumerable<SelectListItem> Values { get; set; }
+        public string UserVotedForSong {get;set;}
         
     }
 
