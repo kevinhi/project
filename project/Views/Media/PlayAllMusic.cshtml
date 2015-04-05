@@ -68,12 +68,11 @@
                         var isPublic = json["IsPublic"];
                         //tracks.push(id,title,genre,fileurl, isPublic);
                         tracks.push(new MediaElement(id, title, fileurl, genre));
-
                     });
                     trackCount = tracks.length;
                     npAction = $('#npAction');
                     npTitle = $('#npTitle');
-                    
+
                     audio = $('#audio1').bind('play', function () {
                         playing = true;
                         npAction.text('Now Playing:');
@@ -94,8 +93,8 @@
                     }).get(0)
 
                     btnPrev = $('#btnPrev').click(function () {
-                        if ((index + 1) < trackCount) {
-                            index++;
+                        if ((index - 1) > -1) {
+                            index--;
                             loadTrack(index);
                             if (playing) {
                                 audio.play();
@@ -105,11 +104,10 @@
                             index = 0;
                             loadTrack(index);
                         }
-                        
                     }),
             btnNext = $('#btnNext').click(function () {
-                if ((index - 1) > -1) {
-                    index--;
+                if ((index + 1) < trackCount) {
+                    index++;
                     loadTrack(index);
                     if (playing) {
                         audio.play();
