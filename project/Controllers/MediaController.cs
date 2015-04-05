@@ -216,7 +216,7 @@ namespace project.Controllers
         public ActionResult GetSongs()
         {
             var media = db.MediaElements;
-            var orderedMedia = media.OrderByDescending(a => a.Id).ToList();
+            var orderedMedia = media.OrderBy(a => a.Id).ToList();
 
             List<MediaElement> mediaList = orderedMedia;
 

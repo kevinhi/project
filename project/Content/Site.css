@@ -1,7 +1,7 @@
 ﻿html {
     background-color: #fff;
     margin: 0;
-    padding: 0;
+    padding: 0;  
 }
 
 body {
@@ -401,6 +401,46 @@ aside {
     margin: 5px 0 0 10px;
 }
 
+/* PlayAllMusic
+    ----------------------------------------------------------*/
+    .plNum {
+        width:10%;
+        float:left;
+        padding-top:5;
+        margin-left:1%;
+    }
+
+    .plTitle {
+        width:10%;
+        float:left;
+        padding-top:5;
+    }
+    .plLength {
+        padding-left:30%;
+        padding-top:5;
+    }
+
+    #plUL {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .plItem {
+        margin-top:1%;
+        border: 2px solid #a1a1a1;
+        border-radius: 25px;
+        width:100%;
+    }
+    .votingSection {
+        
+    }
+     .plItem:hover {
+        background-color:grey;
+        cursor:pointer;
+    }
+
+
 /* forms */
 fieldset {
     border: none;
@@ -742,8 +782,6 @@ tr.pager td {
         float: none;
         width: auto;
     }
-
-
     /* footer
     ----------------------------------------------------------*/
     footer .float-left,
