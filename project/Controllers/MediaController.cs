@@ -144,7 +144,6 @@ namespace project.Controllers
         {
 
             string genre = form["genre"].ToString();
-            System.Diagnostics.Debug.WriteLine(genre);
             //ViewBag.selectedGenre = genre;
             TempData["userGenre"] = genre;
             return RedirectToAction("BrowseByGenre", new { tempDataSet = true });
@@ -171,7 +170,6 @@ namespace project.Controllers
         {
 
             string titleToSearchFor = form["titleToSearchFor"].ToString();
-            System.Diagnostics.Debug.WriteLine(titleToSearchFor);
             //ViewBag.selectedGenre = genre;
             TempData["searchResults"] = titleToSearchFor;
             return RedirectToAction("SearchTitle", new { hasSearched = true });

@@ -8,6 +8,7 @@ namespace project.Models
         public string UserId { get; set; }
         public string PlaylistName { get; set; }
         public string SongsID { get; set; }
+
     }
 
 }
