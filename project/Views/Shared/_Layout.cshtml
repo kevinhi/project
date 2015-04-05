@@ -1,58 +1,58 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
-        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />
-        @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")
-        @Styles.Render("~/Content/themes/base/css")
-    </head>
-    <body>
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/icon.jpg\" ... />"))</p>
-                </div>
-                <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            @if (Request.IsAuthenticated)
-                            {
-                                <li>@Html.ActionLink("Upload Music", "Upload", "Media")</li>
-    <li>@Html.ActionLink("Listen to Music", "BrowseMusic", "Media")</li>
-                                <li>@Html.ActionLink("Create Playlists", "Index", "Media")</li>
-                                <li>@Html.ActionLink("My Media", "Index", "Media")</li>
-                            }
-                            else
-                            {
-                                <li>@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                <li>@Html.ActionLink("Create Account", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-                            }
-                        </ul>
-                    </nav>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/themes/base/css")
+</head>
+<body>
+    <header>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p class="site-title">@Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img src=\"/Images/icon.jpg\" ... />"))</p>
             </div>
-        </header>
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
+            <div class="float-right">
+                <section id="login">
+                    @Html.Partial("_LoginPartial")
+                </section>
+                <nav>
+                    <ul id="menu">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li>@Html.ActionLink("Upload Music", "Upload", "Media")</li>
+                            <li>@Html.ActionLink("Listen to Music", "BrowseMusic", "Media")</li>
+                            <li>@Html.ActionLink("Playlists", "CreatePlaylist", "Media")</li>
+                            <li>@Html.ActionLink("My Media", "Index", "Media")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            <li>@Html.ActionLink("Create Account", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                        }
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - Music Streaming Site - Joel Svensson - Kevin Hildebrand</p>
-                </div>
+    </header>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year - Music Streaming Site - Joel Svensson - Kevin Hildebrand</p>
             </div>
-        </footer>
+        </div>
+    </footer>
 
-        @Scripts.Render("~/bundles/jquery")
-        @RenderSection("scripts", required: false)
-    </body>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
 </html>

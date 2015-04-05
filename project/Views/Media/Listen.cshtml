@@ -6,7 +6,7 @@
 }
 <h2>Listen To Music</h2>
 <h3>@ViewBag.VoteMessage</h3>
-       <table>
+<table>
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Title)
@@ -50,14 +50,14 @@
                 </td>
                 <td>
                     <div style="padding-left:100%;">
-                        <a href='@Url.Action("UpVote", "Media", new { id = item.Id })'>
+                        <a href='@Url.Action("UpVote", "Media", new { id = item.Id, view = "Listen" })'>
                             <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
                         </a>
                     </div>
                 </td>
                 <td>
                     <div style="padding-left:0%;">
-                        <a href='@Url.Action("DownVote", "Media", new { id = item.Id })'>
+                        <a href='@Url.Action("DownVote", "Media", new { id = item.Id, view = "Listen" })'>
                             <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
                         </a>
                     </div>
@@ -71,4 +71,3 @@
     }
 
 </table>
-

@@ -21,82 +21,84 @@
         <p>Choose Genre: </p>
         <div>@Html.DropDownList("genre", (SelectList)ViewBag.ListOfGenres)</div>
         <div><input type="submit" value="Search"></div>
-        
+
     </div>
 </form>
 @if (ViewBag.selectedGenre != null)
-{ 
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Genre)
-        </th>
-        <th>
+{
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
 
-        </th>
-        <th>
+            </th>
+            <th>
 
-        </th>
-        <th>
+            </th>
+            <th>
 
-        </th>
-        <th>
+            </th>
+            <th>
 
-        </th>
-    </tr>
+            </th>
+        </tr>
 
 
-    @foreach (var item in Model)
-    {
-        if (item.Genre == ViewBag.selectedGenre)
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Genre)
-                </td>
-                <td>
-                    <article class="audio">
-                        <audio controls>
-                            <source src=@item.FileUrl type="audio/mp3" />
-                            <p>Your browser does not support HTML 5 audio element</p>
-                        </audio>
-                    </article>
-                </td>
-                <td>
-                    <div style="padding-left:100%;">
-                        <a href='@Url.Action("UpVote", "Media", new { id = item.Id })'>
-                            <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
-                        </a>
-                    </div>
-                </td>
-                <td>
-                    <div style="padding-left:0%;">
-                        <a href='@Url.Action("DownVote", "Media", new { id = item.Id })'>
-                            <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
-                        </a>
-                    </div>
-                </td>
-                <td>
-                    <div style="background-color:dimgrey; width:100%; height:10%;"><div style="color:white;">@item.Votes</div></div>
-                </td>
-            </tr>
-
+            if (item.Genre == ViewBag.selectedGenre)
+            {
+                if (item.IsPublic == true)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Genre)
+                        </td>
+                        <td>
+                            <article class="audio">
+                                <audio controls>
+                                    <source src=@item.FileUrl type="audio/mp3" />
+                                    <p>Your browser does not support HTML 5 audio element</p>
+                                </audio>
+                            </article>
+                        </td>
+                        <td>
+                            <div style="padding-left:100%;">
+                                <a href='@Url.Action("UpVote", "Media", new { id = item.Id, view = "BrowseByGenre" })'>
+                                    <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="padding-left:0%;">
+                                <a href='@Url.Action("DownVote", "Media", new { id = item.Id, view = "BrowseByGenre" })'>
+                                    <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="background-color:dimgrey; width:100%; height:10%;"><div style="color:white;">@item.Votes</div></div>
+                        </td>
+                    </tr>
+                }
+            }
         }
-    }
 
-</table>
+    </table>
 }
 
-    <div>
-        @Html.ActionLink("Back", "BrowseMusic")
-    </div>
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryui")
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+<div>
+    @Html.ActionLink("Back", "BrowseMusic")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+}

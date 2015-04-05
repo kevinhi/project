@@ -401,6 +401,17 @@ aside {
     margin: 5px 0 0 10px;
 }
 
+/* PlayList
+    ----------------------------------------------------------*/
+.leftBar {
+    float:left;
+    width:50%;
+}
+.rightBar {
+    float:right;
+    width:50%;
+}
+
 /* PlayAllMusic
     ----------------------------------------------------------*/
     .plNum {
@@ -410,14 +421,39 @@ aside {
         margin-left:1%;
     }
 
+    #addToPlaylistButton {
+        background-color: #d3dce0;
+        /* border: 1px solid #787878; */
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: 600;
+        padding: 0px;
+        margin-right: 0px;
+        width: auto;
+        height:auto;
+        margin:0;
+    }
+
     .plTitle {
         width:10%;
         float:left;
         padding-top:5;
     }
     .plLength {
-        padding-left:30%;
+        margin-left:10%;
         padding-top:5;
+        float:left;
+    }
+    .mediaContainer {
+        width:50%;
+        float:left;
+         border: 5px solid #a1a1a1;
+         border-radius: 25px;
+    }
+
+    .mediaContainer:hover {
+        cursor:pointer;
+        background-color:whitesmoke;
     }
 
     #plUL {
@@ -433,11 +469,11 @@ aside {
         width:100%;
     }
     .votingSection {
-        
+        margin-left:0%;
     }
-     .plItem:hover {
-        background-color:grey;
-        cursor:pointer;
+    .voteup {
+        display:inline;
+        margin-left:3%;
     }
 
 

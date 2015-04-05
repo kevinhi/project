@@ -1,0 +1,42 @@
+﻿@model IEnumerable<project.Models.PlayList>
+
+@{
+    ViewBag.Title = "MyPlayList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>MyPlayList</h2>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlaylistName)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+
+    @foreach (var item in Model)
+    {
+        if (item.UserId == Convert.ToString(Membership.GetUser().ProviderUserKey))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlaylistName)
+                </td>
+                <td>
+                    Listen To Me...
+                </td>
+            </tr>
+
+        }
+    }
+
+</table>

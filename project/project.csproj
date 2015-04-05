@@ -222,6 +222,7 @@
     </Compile>
     <Compile Include="Models\MediaElement.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\PlayList.cs" />
     <Compile Include="Models\projectContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -367,6 +368,7 @@
     <Content Include="Views\Media\TopRated.cshtml" />
     <Content Include="Views\Media\SearchTitle.cshtml" />
     <Content Include="Views\Media\PlayAllMusic.cshtml" />
+    <Content Include="Views\Media\MyPlayList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -18,5 +18,6 @@ namespace project.Models
         }
 
         public DbSet<MediaElement> MediaElements { get; set; }
+        public DbSet<PlayList> Playlist { get; set; }
     }
 }

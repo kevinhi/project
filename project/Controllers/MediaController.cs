@@ -89,7 +89,7 @@ namespace project.Controllers
 
 
 
-        public ActionResult UpVote(int id = 0)
+        public ActionResult UpVote(int id = 0, string view = "0")
         {
             int mu1 = (int)WebSecurity.CurrentUserId;
             MediaElement mediaelement = db.MediaElements.Find(id);
@@ -102,7 +102,7 @@ namespace project.Controllers
                     if (Convert.ToString(mu1) == word)
                     {
                         TempData["UserVoted"] = "You have already voted for this song";
-                        return RedirectToAction("Listen", new { isRating = true, hasVoted = true });
+                        return RedirectToAction(view, new { isRating = true, hasVoted = true });
                     }
                     else if (Convert.ToString(mu1) != word)
                     {
@@ -118,7 +118,7 @@ namespace project.Controllers
                                 mediaelement.Votes = "+1";
                                 db.SaveChanges();
 
-                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                                return RedirectToAction(view, new { isRating = true, hasVoted = false });
                             }
                             else
                             {
@@ -128,7 +128,7 @@ namespace project.Controllers
                                 vote = Convert.ToString(i);
                                 mediaelement.Votes = vote;
                                 db.SaveChanges();
-                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                                return RedirectToAction(view, new { isRating = true, hasVoted = false });
                             }
                         }
                     }
@@ -149,6 +149,7 @@ namespace project.Controllers
             TempData["userGenre"] = genre;
             return RedirectToAction("BrowseByGenre", new { tempDataSet = true });
         }
+
 
         public ActionResult BrowseByGenre(bool tempDataSet = false)
         {
@@ -206,7 +207,7 @@ namespace project.Controllers
             amountToShow.Add(4);
             ViewBag.ListOfAmounts = new SelectList(amountToShow);
 
-            
+
             var media = db.MediaElements;
             var orderedMedia = media.OrderByDescending(a => a.Votes).Take(numberOfSongsToShow);
 
@@ -224,7 +225,7 @@ namespace project.Controllers
 
         }
 
-        public ActionResult DownVote(int id = 0)
+        public ActionResult DownVote(int id = 0, string view = "0")
         {
             int mu1 = (int)WebSecurity.CurrentUserId;
             MediaElement mediaelement = db.MediaElements.Find(id);
@@ -237,7 +238,7 @@ namespace project.Controllers
                     if (Convert.ToString(mu1) == word)
                     {
                         TempData["UserVoted"] = "You have already voted for this song";
-                        return RedirectToAction("Listen", new { isRating = true, hasVoted = true });
+                        return RedirectToAction(view, new { isRating = true, hasVoted = true });
                     }
                     else if (Convert.ToString(mu1) != word)
                     {
@@ -253,7 +254,7 @@ namespace project.Controllers
                                 mediaelement.Votes = "-1";
                                 db.SaveChanges();
 
-                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                                return RedirectToAction(view, new { isRating = true, hasVoted = false });
                             }
                             else
                             {
@@ -263,7 +264,7 @@ namespace project.Controllers
                                 vote = Convert.ToString(i);
                                 mediaelement.Votes = vote;
                                 db.SaveChanges();
-                                return RedirectToAction("Listen", new { isRating = true, hasVoted = false });
+                                return RedirectToAction(view, new { isRating = true, hasVoted = false });
                             }
                         }
                     }
@@ -380,7 +381,28 @@ namespace project.Controllers
         [HttpGet]
         public ActionResult CreatePlaylist()
         {
-            return View();
+            var model = new PlayList();
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult MyPlayList()
+        {
+            return View(db.Playlist.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult SavePlaylist(PlayList playlist)
+        {
+            if (ModelState.IsValid)
+            {
+                string currentUserId = Convert.ToString(Membership.GetUser().ProviderUserKey);
+                playlist.UserId = currentUserId;
+                db.Playlist.Add(playlist);
+                db.SaveChanges();
+                return RedirectToAction("CreatePlaylist");
+            }
+            return RedirectToAction("CreatePlaylist");
         }
 
         [HttpPost]
@@ -435,9 +457,36 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult PlayAllMusic()
+        public ActionResult PlayAllMusic(bool isRating = false, bool hasVoted = false)
         {
-            return View(db.MediaElements.ToList());
+            var uId = Convert.ToString(Membership.GetUser().ProviderUserKey);
+            List<string> playlists = new List<string>();
+            var dbEntry = db.Playlist.ToList();
+            var playL = dbEntry.Where((c, i) => c.UserId == uId).Select(c => c.PlaylistName);
+
+            foreach (var item in playL)
+            {
+                playlists.Add(item);
+            }
+            ViewBag.playlists = new SelectList(playlists);
+
+            if (isRating)
+            {
+                if (hasVoted)
+                {
+                    ViewBag.VoteMessage = TempData["UserVoted"].ToString();
+                    return View(db.MediaElements.ToList());
+                }
+                else
+                {
+                    ViewBag.VoteMessage = "Thank you for your vote";
+                    return View(db.MediaElements.ToList());
+                }
+            }
+            else
+            {
+                return View(db.MediaElements.ToList());
+            }
         }
     }
 }

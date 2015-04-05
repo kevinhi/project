@@ -1,6 +1,37 @@
-﻿@{
-    ViewBag.Title = "CreatePlaylist";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@model project.Models.PlayList
+
+@{
+    ViewBag.Title = "Create Playlist";
 }
 
-<h2>CreatePlaylist</h2>
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("SavePlaylist", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="leftBar">
+        <fieldset>
+            <legend>Create Playlist: </legend>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PlaylistName)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PlaylistName)
+                @Html.ValidationMessageFor(model => model.PlaylistName)
+            </div>
+
+            <p>
+                <input type="submit" value="Create Playlist" />
+            </p>
+        </fieldset>
+    </div>
+    <div class="rightBar">
+        @Html.ActionLink("View My Playlists", "MyPlayList")
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

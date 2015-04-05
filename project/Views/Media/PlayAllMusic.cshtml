@@ -3,8 +3,7 @@
     ViewBag.Title = "PlayAllMusicFrom One Player";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h3>@ViewBag.Title</h3>
-
+<h3>@ViewBag.VoteMessage</h3>
 <div id="cwrap">
     <div id="nowPlay">
         <h3 id="npAction">Paused:</h3>
@@ -24,16 +23,43 @@
         <ul id="plUL">
             @foreach (var item in Model)
             {
-                <li>
-                    <div class="plItem">
-                        <div class="plNum">@item.Id</div>
-                        <div class="plTitle">@item.Title</div>
-                        <div class="plLength">@item.Genre </div>
-                    </div>
-                </li>
+                if (item.IsPublic == true)
+                {
+                    <li>
+                        <div class="plItem">
+                            <div class="mediaContainer">
+                                <div class="plNum">@item.Id</div>
+                                <div class="plTitle">@item.Title</div>
+                                <div class="plLength">@item.Genre</div>
+                            </div>
+                            <div class="votingSection">
+                                <div class="voteup">
+                                    <a href='@Url.Action("UpVote", "Media", new { id = item.Id, view = "PlayAllMusic" })'>
+                                        <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
+                                    </a>
+                                </div>
+                                <div class="voteup">
+                                    <a href='@Url.Action("DownVote", "Media", new { id = item.Id, view = "PlayAllMusic" })'>
+                                        <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
+                                    </a>
+                                </div>
+                                <div class="voteup">Votes: @item.Votes</div>
+                                <div class="voteup">
+                                    @Html.DropDownList("playlists", (SelectList)ViewBag.playlists)
+                                </div>
+                                <div class="voteup">
+                                    <input id="addToPlaylistButton" type="submit" value="Add" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
             }
         </ul>
     </div>
+</div>
+<div>
+    @Html.ActionLink("Back", "BrowseMusic")
 </div>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
@@ -67,11 +93,15 @@
                         var genre = json["Genre"];
                         var isPublic = json["IsPublic"];
                         //tracks.push(id,title,genre,fileurl, isPublic);
-                        tracks.push(new MediaElement(id, title, fileurl, genre));
+                        if (isPublic == true) {
+                            tracks.push(new MediaElement(id, title, fileurl, genre));
+                        }
+
                     });
                     trackCount = tracks.length;
                     npAction = $('#npAction');
                     npTitle = $('#npTitle');
+                    $("votingSection").off("click");
 
                     audio = $('#audio1').bind('play', function () {
                         playing = true;
@@ -118,9 +148,9 @@
                     loadTrack(index);
                 }
             }),
-            li = $('#plUL li').click(function () {
+            li = $('.mediaContainer').click(function () {
                 //var id = parseInt($(this).index());
-                var id = $("#plUL li").index(this);
+                var id = $(".mediaContainer").index(this);
                 if (id !== index) {
                     playTrack(id);
                 }
