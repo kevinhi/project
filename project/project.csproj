@@ -369,6 +369,7 @@
     <Content Include="Views\Media\SearchTitle.cshtml" />
     <Content Include="Views\Media\PlayAllMusic.cshtml" />
     <Content Include="Views\Media\MyPlayList.cshtml" />
+    <Content Include="Views\Media\PlayList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -4,7 +4,7 @@
 }
 
 <h2>BrowseMusic</h2>
-<li>@Html.ActionLink("Browse All Music", "PlayAllMusic", "Media", new { isRating = false, hasVoted = false })</li>
+<li>@Html.ActionLink("Browse All Music", "PlayAllMusic", "Media", new { isRating = false, hasVoted = false, hasAddedToPlaylist = false })</li>
 <li>@Html.ActionLink("Browse by Genre", "BrowseByGenre", "Media", new { tempDataSet = false })</li>
 <li>@Html.ActionLink("Search for Title", "SearchTitle", "Media", new { hasSearched = true })</li>
 <li>@Html.ActionLink("Top Rated", "TopRated", "Media", new { numberOfSongsToShow = 0 })</li>

@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<project.Models.MediaElement>
 @{
-    ViewBag.Title = "PlayAllMusicFrom One Player";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h2>@ViewBag.NameOfPlaylist</h2>
 <h3>@ViewBag.VoteMessage</h3>
 <div id="cwrap">
     <div id="nowPlay">
@@ -34,28 +34,16 @@
                             </div>
                             <div class="votingSection">
                                 <div class="voteup">
-                                    <a href='@Url.Action("UpVote", "Media", new { id = item.Id, view = "PlayAllMusic" })'>
+                                    <a href='@Url.Action("UpVote", "Media", new { id = ViewBag.ID, view = "PlayList" })'>
                                         <img src='@Url.Content("~/Images/down.png")' width="25" height="25" />
                                     </a>
                                 </div>
                                 <div class="voteup">
-                                    <a href='@Url.Action("DownVote", "Media", new { id = item.Id, view = "PlayAllMusic" })'>
+                                    <a href='@Url.Action("DownVote", "Media", new { id = ViewBag.ID, view = "PlayList" })'>
                                         <img src='@Url.Content("~/Images/up.png")' width="25" height="25" />
                                     </a>
                                 </div>
                                 <div class="voteup">Votes: @item.Votes</div>
-                                <form method="post" action="saveToPlaylist">
-                                    @Html.AntiForgeryToken()
-                                    <div class="voteup">
-                                        @Html.DropDownList("playlists", (SelectList)ViewBag.playlists)
-                                    </div>
-                                    <div class="voteup">
-                                        <input type="hidden" name="songID" value=@item.Id />
-                                        <input type="hidden" name="" value="" />
-                                        <input id="addToPlaylistButton" type="submit" value="Add" />
-                                    </div>
-                                </form>
-
                             </div>
                         </div>
                     </li>
@@ -85,8 +73,9 @@
             };
 
             $.ajax({
-                url: '@Url.Action("GetSongs")',
+                url: '@Url.Action("getPlaylist")',
                 type: 'GET',
+                data: {'id': @ViewBag.ID},
                 dataType: 'json',
                 success: function (data) {
                     // process the data coming back

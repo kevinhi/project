@@ -149,6 +149,78 @@ namespace project.Controllers
             return RedirectToAction("BrowseByGenre", new { tempDataSet = true });
         }
 
+         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult saveToPlaylist(int songID, FormCollection form)
+        {
+            string playlist = form["playlists"].ToString().Trim();
+            var entityChange = db.Playlist.Where(i => i.PlaylistName == playlist).First();
+            if (entityChange.SongsID == null)
+            {
+                entityChange.SongsID = Convert.ToString(songID);
+            }
+            else
+            {
+                entityChange.SongsID = entityChange.SongsID + "," + songID;
+            }
+            db.Entry(entityChange).State = EntityState.Modified;
+            db.SaveChanges();
+            TempData["UserVoted"] = "Song added to " + entityChange.PlaylistName;
+
+            return RedirectToAction("PlayAllMusic", new { isRating = false, hasVoted = false, hasAddedToPlaylist = true });
+        }
+
+
+         public ActionResult getPlaylist(int id = 0)
+         {
+             PlayList playlist = db.Playlist.Find(id);
+             string songs = playlist.SongsID;
+             string[] songssArray = songs.Split(',');
+             var songsList = songssArray.ToList();
+             List<MediaElement> mediaElementList = new List<MediaElement>();
+             foreach (var item in songsList)
+             {
+                 if (item == "")
+                 {
+                     continue;
+                 }
+                 var intItem = Convert.ToInt32(item);
+                 MediaElement mediaelement = db.MediaElements.Where(c => c.Id == intItem).First();
+                 mediaElementList.Add(mediaelement);
+             }
+            
+
+             return Json(mediaElementList, JsonRequestBehavior.AllowGet);
+
+         }
+
+         public ActionResult PlayList(int id = 0)
+         {
+             ViewBag.ID = id;
+             PlayList playlist = db.Playlist.Find(id);
+             ViewBag.NameOfPlaylist = playlist.PlaylistName;
+             string songs = playlist.SongsID;
+             if (songs == null)
+             {
+                 TempData["errorMessage"] = "Add Music to your Playlist first";
+                 return RedirectToAction("MyPlayList", new { mustAdd = true });
+             }
+             string[] songssArray = songs.Split(',');
+             var songsList = songssArray.ToList();
+             List<MediaElement> mediaElementList = new List<MediaElement>();
+             foreach (var item in songsList){
+                 if (item == "")
+                 {
+                     continue;
+                 }
+                 var intItem = Convert.ToInt32(item);
+                 MediaElement mediaelement = db.MediaElements.Where(c => c.Id == intItem).First();
+                 mediaElementList.Add(mediaelement);
+             }
+            
+             return View(mediaElementList);
+         }
+
 
         public ActionResult BrowseByGenre(bool tempDataSet = false)
         {
@@ -384,12 +456,17 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult MyPlayList()
+        public ActionResult MyPlayList(bool mustAdd = false)
         {
+            if (mustAdd)
+            {
+                ViewBag.error = TempData["errorMessage"];
+            }
             return View(db.Playlist.ToList());
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SavePlaylist(PlayList playlist)
         {
             if (ModelState.IsValid)
@@ -455,19 +532,25 @@ namespace project.Controllers
         }
 
         [HttpGet]
-        public ActionResult PlayAllMusic(bool isRating = false, bool hasVoted = false)
+        public ActionResult PlayAllMusic(bool isRating = false, bool hasVoted = false, bool hasAddedToPlaylist = false)
         {
             var uId = Convert.ToString(Membership.GetUser().ProviderUserKey);
-            List<string> playlists = new List<string>();
+            List<string> newList = new List<string>();
+            
+            
             var dbEntry = db.Playlist.ToList();
             var playL = dbEntry.Where((c, i) => c.UserId == uId).Select(c => c.PlaylistName);
 
             foreach (var item in playL)
             {
-                playlists.Add(item);
+                newList.Add(item);
             }
-            ViewBag.playlists = new SelectList(playlists);
-
+            newList.Distinct().ToList();
+            ViewBag.playlists = new SelectList(newList);
+            if (hasAddedToPlaylist)
+            {
+                ViewBag.VoteMessage = TempData["UserVoted"].ToString();
+            }
             if (isRating)
             {
                 if (hasVoted)

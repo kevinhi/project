@@ -6,6 +6,7 @@
 }
 
 <h2>MyPlayList</h2>
+<h3>@ViewBag.error</h3>
 <table>
     <tr>
         <th>
@@ -13,6 +14,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PlaylistName)
+        </th>
+        <th>
+
         </th>
         <th>
 
@@ -32,7 +36,24 @@
                     @Html.DisplayFor(modelItem => item.PlaylistName)
                 </td>
                 <td>
-                    Listen To Me...
+                    @Html.ActionLink("Listen to " + item.PlaylistName,
+                "PlayList",   // <-- ActionMethod
+                "Media",  // <-- Controller Name.
+                new { item.Id }, // <-- Route arguments.
+                null  // <-- htmlArguments .. which are none. You need this value
+                //     otherwise you call the WRONG method ...
+                //     (refer to comments, below).
+                )
+                </td>
+                <td>
+                @if (item.SongsID == null)
+                {
+                    <div>Number Of Songs in Playlist: 0</div>
+                }
+                else
+                {
+                    <div>Number Of Songs in Playlist: @item.SongsID.Split(',').Count()</div>
+                }
                 </td>
             </tr>
 
